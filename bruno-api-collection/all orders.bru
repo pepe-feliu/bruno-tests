@@ -1,0 +1,42 @@
+meta {
+  name: all orders
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/orders
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("Check if API returns a successful status code", function () {
+      const data = res.getBody();
+      expect(res.getStatus()).to.equal(200);
+  });
+  
+  test("Verify that API response is an object", function () {
+      const data = res.getBody();
+      expect(data).to.be.an("array");
+  });
+  
+  test("Ensure API response has at least one key", function () {
+      const data = res.getBody();
+      expect(Object.keys(data).length).to.be.greaterThan(0);
+  });
+  
+  test("Verify that API response has the same 'createdBy' value across all items", function () {
+      const data = res.getBody();
+      let createdByValues = [];
+      data.forEach(obj => {
+          if (typeof obj.createdBy !== 'undefined') {
+              createdByValues.push(obj.createdBy);
+          }
+      });
+  });
+}

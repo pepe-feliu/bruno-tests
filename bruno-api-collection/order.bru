@@ -1,0 +1,68 @@
+meta {
+  name: order
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{baseUrl}}/orders
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "bookId": "{{bookId}}",
+    "customerName": "{{clientName}}"
+  }
+}
+
+script:pre-request {
+  function getRandomNumber() {
+      let num = Math.floor(Math.random() * 5) + 1;
+      while (num === 2) {
+          num = Math.floor(Math.random() * 5) + 1;
+      }
+      return num;
+  }
+  
+  bru.setVar("bookId", getRandomNumber());
+}
+
+script:post-response {
+  const orderId = res.getBody().orderId;
+  
+  bru.setEnvVar("orderId", orderId);
+}
+
+tests {
+  test("Verify successful request", function () {
+      const data = res.getBody();
+      expect(res.getStatus()).to.equal(201);
+      expect(Object.keys(data).length).to.be.greaterThan(0);
+  });
+  
+  test("Verify that the API response is an object", function () {
+      const data = res.getBody();
+      expect(data).to.be.an("object");
+  });
+  
+  test("Check if the API response has at least one key", function () {
+      const data = res.getBody();
+      expect(Object.keys(data).length).to.be.greaterThan(0);
+  });
+  
+  test("Verify that the 'created' property is a boolean value", function () {
+      const data = res.getBody();
+      expect(typeof data.created).to.equal("boolean");
+  });
+  
+  test("Check if the API returns an order ID in the response", function () {
+      const data = res.getBody();
+      expect(data.orderId).to.be.a("string").not.to.be.empty;
+  });
+}

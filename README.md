@@ -1,0 +1,1 @@
+# Run bruno tests on Github actions

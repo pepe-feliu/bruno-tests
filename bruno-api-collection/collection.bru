@@ -1,0 +1,73 @@
+vars:pre-request {
+  ollama_local: http://localhost:11434
+  model: phi4
+}
+
+script:post-response {
+  // TEST CASE GENERATION WITH AI
+  
+  /*const axios = require('axios');
+  const local = bru.getCollectionVar("ollama_local");
+  const model = bru.getCollectionVar("model");
+  
+  async function isOllamaRunning() {
+      try {
+          const response = await axios.get(`${local}/api/tags`);
+          return response.status === 200;
+      } catch (error) {
+          return false;
+      }
+  }
+  
+  async function testGenerator() {
+      try {
+          const apiUrl = await req.getUrl();
+          const apiResponse = await res.getBody();
+          
+          const prompt = `You are a QA Automation Engineer working on smoke tests a books API.
+  You are testing a web service that can do typical CRUD actions on the API. You create the tests based solely in the API response. It doesn't need to involve other calls.
+  It is very important that generate JavaScript API test scripts based ONLY on the fields of the API response from \`${apiUrl}\`
+  The API response looks like this:
+  \`\`\`${JSON.stringify(apiResponse)}\`\`\`
+  
+  Use this format:
+  \`\`\`javascript
+  test("[Test description]", function () {
+      const data = res.getBody();
+      expect(res.getStatus()).to.equal(200);
+      expect(data).to.be.an("object");
+      expect(Object.keys(data).length).to.be.greaterThan(0);
+  });
+  // Add more tests based on response structure.
+  \`\`\``;
+          
+          const payload = {
+              model: model,
+              prompt: prompt,
+              stream: false, // Set to false to get the full response at once
+              options: {
+                  temperature: 0.1,
+                  top_k: 40,
+                  top_p: 0.95,
+                  max_tokens: 5000
+              }
+          };
+          
+          const response = await axios.post(`${local}/api/generate`, payload);
+          return response.data.response || "";
+      } catch (error) {
+          console.error("Error fetching response from Ollama:", error.response?.data || error.message);
+          return null;
+      }
+  }
+  
+  // Check if Ollama is running before executing
+  isOllamaRunning().then(running => {
+      if (running) {
+          testGenerator().then(console.log);
+      } else {
+          console.error("Ollama server is not running. Please start it with 'ollama serve'");
+      }
+  });
+  */
+}
