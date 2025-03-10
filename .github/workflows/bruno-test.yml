@@ -15,5 +15,13 @@ jobs:
         run: npm install -g @usebruno/cli
         
       - name: Run API Tests
-        run: bru run --env books --reporter-html results.html
+        run: bru run --env books --reporter-html ./results.html
         working-directory: bruno-api-collection
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: bruno-test-report
+          path: bruno-api-collection/results.html
+          retention-days: 1
