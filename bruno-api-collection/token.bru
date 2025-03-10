@@ -1,0 +1,45 @@
+meta {
+  name: token
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api-clients
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+     "clientName": "{{clientName}}",
+     "clientEmail": "{{clientEmail}}"
+  }
+}
+
+script:pre-request {
+  const randomString = Math.random().toString(36).substring(2, 12);
+  
+  bru.setVar("clientName", randomString);
+  bru.setVar("clientEmail", randomString + "@test.biz");
+}
+
+script:post-response {
+  const token = res.getBody().accessToken;
+  
+  bru.setEnvVar("token", token);
+}
+
+tests {
+  test("Verify successful request", function () {
+      const data = res.getBody();
+      expect(res.getStatus()).to.equal(201);
+      expect(Object.keys(data).length).to.be.greaterThan(0);
+  });
+  
+  test("Verify token successfully returned", function () {
+      const data = res.getBody();
+      expect(data.accessToken).to.be.a("string");
+  });
+  
+}

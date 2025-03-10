@@ -1,0 +1,62 @@
+meta {
+  name: book info
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/books/:bookId
+  body: none
+  auth: none
+}
+
+params:path {
+  bookId: {{bookId}}
+}
+
+script:pre-request {
+  function getRandomNumber() {
+      return Math.floor(Math.random() * 5) + 1;
+  }
+  
+  bru.setVar("bookId", getRandomNumber());
+}
+
+tests {
+  test("Check successful request", function () {
+      const data = res.getBody();
+      expect(res.getStatus()).to.equal(200);
+      expect(data).to.be.an("object");
+      expect(Object.keys(data).length).to.be.greaterThan(0);
+  });
+  
+  test("Verify book details in response", function () {
+      const data = res.getBody();
+      expect(data.id).to.be.a("number");
+      expect(data.name).to.be.a("string");
+      expect(data.author).to.be.a("string");
+      expect(data.type).to.be.a("string");
+      expect(data.price).to.be.a("number");
+      expect(data.available).to.be.a("boolean");
+  });
+  
+  test("Check availability when currentStock is 0", function () {
+      const data = res.getBody();
+      if (data.available) {
+        expect(data['current-stock']).to.be.greaterThan(0);
+      } else {
+        expect(data['current-stock']).to.be.equal(0);
+      }
+  });
+  
+  test("Check for missing fields in response", function () {
+      const data = res.getBody();
+      expect(Object.keys(data).includes('id')).to.be.true;
+      expect(Object.keys(data).includes('name')).to.be.true;
+      expect(Object.keys(data).includes('author')).to.be.true;
+      expect(Object.keys(data).includes('type')).to.be.true;
+      expect(Object.keys(data).includes('price')).to.be.true;
+      expect(Object.keys(data).includes('current-stock')).to.be.true;
+      expect(Object.keys(data).includes('available')).to.be.true;
+  });
+}

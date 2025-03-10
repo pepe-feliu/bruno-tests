@@ -1,0 +1,26 @@
+meta {
+  name: delete order
+  type: http
+  seq: 9
+}
+
+delete {
+  url: {{baseUrl}}/orders/:orderId
+  body: json
+  auth: bearer
+}
+
+params:path {
+  orderId: {{orderId}}
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("Verify successful request", function () {
+      const data = res.getBody();
+      expect(res.getStatus()).to.equal(204);
+  });
+}

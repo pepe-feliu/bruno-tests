@@ -1,17 +1,19 @@
 name: Automated API testing with Bruno
 on:
+  push:
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
-      - develop
+    branches: [ main ]
 jobs:
   run-bruno-tests:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
+
       - name: Install Bruno CLI
         run: npm install -g @usebruno/cli
+        
       - name: Run API Tests
-        run: bru run --env books
+        run: bru run --env books --reporter-html results.html
         working-directory: bruno-api-collection

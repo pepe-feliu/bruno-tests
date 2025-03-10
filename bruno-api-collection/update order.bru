@@ -1,0 +1,38 @@
+meta {
+  name: update order
+  type: http
+  seq: 8
+}
+
+patch {
+  url: {{baseUrl}}/orders/:orderId
+  body: json
+  auth: bearer
+}
+
+params:path {
+  orderId: {{orderId}}
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "customerName": "{{customerName}}"
+  }
+}
+
+script:pre-request {
+  const randomString = Math.random().toString(36).substring(2, 12);
+  
+  bru.setVar("customerName", randomString);
+}
+
+tests {
+  test("Verify successful request", function () {
+      const data = res.getBody();
+      expect(res.getStatus()).to.equal(204);
+  });
+}

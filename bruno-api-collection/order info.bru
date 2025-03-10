@@ -1,0 +1,43 @@
+meta {
+  name: order info
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/orders/:orderId
+  body: none
+  auth: bearer
+}
+
+params:path {
+  orderId: {{orderId}}
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+tests {
+  test("Verify successful request", function () {
+      const data = res.getBody();
+      expect(res.getStatus()).to.equal(200);
+      expect(Object.keys(data).length).to.be.greaterThan(0);
+  });
+  
+  test("check data structure", function () {
+      const data = res.getBody();
+      expect(data).to.be.an("object");
+  });
+  
+  test("check of required fields", function () {
+      const data = res.getBody();
+      expect(Object.keys(data).length).to.be.greaterThan(0);
+      expect(data.id).to.be.a("string");
+      expect(data.bookId).to.be.a("number");
+      expect(data.customerName).to.be.a("string");
+      expect(data.createdBy).to.be.a("string");
+      expect(data.quantity).to.be.a("number");
+      expect(data.timestamp).to.be.a("number");
+  });
+}

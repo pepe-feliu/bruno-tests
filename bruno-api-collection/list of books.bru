@@ -1,0 +1,47 @@
+meta {
+  name: list of books
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/books
+  body: none
+  auth: none
+}
+
+tests {
+  test("Verify successful request", function () {
+      const data = res.getBody();
+      expect(res.getStatus()).to.equal(200);
+      expect(Object.keys(data).length).to.be.greaterThan(0);
+  });
+  
+  test("Verify each book contains all the data", function () {
+      const data = res.getBody();
+      expect(data).to.be.an("array");
+      data.forEach(book => {
+          expect(book.id).to.be.a("number");
+          expect(book.name).to.be.a("string");
+          expect(book.type).to.be.a("string");
+          expect(book.available).to.be.a("boolean");
+      });
+  });
+  
+  test("Verify that the API returns a valid list of book types", function () {
+      const data = res.getBody();
+      const bookTypes = new Set(Object.values(data).map((book) => book.type));
+      expect(Array.from(bookTypes)).to.have.members(["fiction", "non-fiction"]);
+  });
+  
+  test("Verify each book has a unique id", function () {
+      const data = res.getBody();
+      expect(data).to.be.an("array");
+  
+      const ids = data.map(book => book.id);
+      const uniqueIds = new Set(ids);
+  
+      expect(uniqueIds.size).to.equal(ids.length);
+  });
+  
+}
