@@ -17,6 +17,10 @@ body:json {
   }
 }
 
+assert {
+  res.status: eq 201
+}
+
 script:pre-request {
   const randomString = Math.random().toString(36).substring(2, 12);
   
@@ -31,12 +35,6 @@ script:post-response {
 }
 
 tests {
-  test("Verify successful request", function () {
-      const data = res.getBody();
-      expect(res.getStatus()).to.equal(201);
-      expect(Object.keys(data).length).to.be.greaterThan(0);
-  });
-  
   test("Verify token successfully returned", function () {
       const data = res.getBody();
       expect(data.accessToken).to.be.a("string");

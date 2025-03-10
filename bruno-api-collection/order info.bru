@@ -18,16 +18,15 @@ auth:bearer {
   token: {{token}}
 }
 
+assert {
+  res.status: eq 200
+}
+
 tests {
-  test("Verify successful request", function () {
-      const data = res.getBody();
-      expect(res.getStatus()).to.equal(200);
-      expect(Object.keys(data).length).to.be.greaterThan(0);
-  });
-  
   test("check data structure", function () {
       const data = res.getBody();
       expect(data).to.be.an("object");
+      expect(Object.keys(data).length).to.be.greaterThan(0);
   });
   
   test("check of required fields", function () {

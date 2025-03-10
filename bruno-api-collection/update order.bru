@@ -24,15 +24,12 @@ body:json {
   }
 }
 
+assert {
+  res.status: eq 204
+}
+
 script:pre-request {
   const randomString = Math.random().toString(36).substring(2, 12);
   
   bru.setVar("customerName", randomString);
-}
-
-tests {
-  test("Verify successful request", function () {
-      const data = res.getBody();
-      expect(res.getStatus()).to.equal(204);
-  });
 }

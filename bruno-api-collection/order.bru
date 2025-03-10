@@ -21,6 +21,10 @@ body:json {
   }
 }
 
+assert {
+  res.status: eq 201
+}
+
 script:pre-request {
   function getRandomNumber() {
       let num = Math.floor(Math.random() * 5) + 1;
@@ -40,15 +44,10 @@ script:post-response {
 }
 
 tests {
-  test("Verify successful request", function () {
-      const data = res.getBody();
-      expect(res.getStatus()).to.equal(201);
-      expect(Object.keys(data).length).to.be.greaterThan(0);
-  });
-  
   test("Verify that the API response is an object", function () {
       const data = res.getBody();
       expect(data).to.be.an("object");
+      expect(Object.keys(data).length).to.be.greaterThan(0);
   });
   
   test("Check if the API response has at least one key", function () {

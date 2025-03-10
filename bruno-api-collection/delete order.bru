@@ -18,9 +18,6 @@ auth:bearer {
   token: {{token}}
 }
 
-tests {
-  test("Verify successful request", function () {
-      const data = res.getBody();
-      expect(res.getStatus()).to.equal(204);
-  });
+assert {
+  res.status: eq 204
 }

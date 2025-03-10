@@ -14,12 +14,11 @@ auth:bearer {
   token: {{token}}
 }
 
+assert {
+  res.status: eq 200
+}
+
 tests {
-  test("Check if API returns a successful status code", function () {
-      const data = res.getBody();
-      expect(res.getStatus()).to.equal(200);
-  });
-  
   test("Verify that API response is an object", function () {
       const data = res.getBody();
       expect(data).to.be.an("array");
